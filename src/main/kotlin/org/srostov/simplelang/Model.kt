@@ -1,5 +1,7 @@
 package org.srostov.simplelang
 
+import org.srostov.simplelang.visitor.base.ExprVisitor
+
 abstract class Expr {
     abstract fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R
 }

@@ -1,6 +1,7 @@
 package org.srostov.simplelang.visitor
 
 import org.srostov.simplelang.*
+import org.srostov.simplelang.visitor.base.PrinterBase
 
 class Printer : PrinterBase() {
     override fun visitConst(x: ConstExpr, a: Unit) {

@@ -1,7 +1,7 @@
-package org.srostov.simplelang.visitor
+package org.srostov.simplelang.visitor.base
 
 import org.srostov.simplelang.Expr
-import org.srostov.simplelang.ExprVisitor
+import org.srostov.simplelang.visitor.base.ExprVisitor
 
 abstract class PrinterBase : ExprVisitor<Unit, Unit> {
     val result: StringBuilder = StringBuilder()

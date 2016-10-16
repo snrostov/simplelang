@@ -1,5 +1,7 @@
 package org.srostov.simplelang
 
+import org.srostov.simplelang.visitor.base.ExprVisitor
+
 abstract class Operator() : (List<Any>) -> Any {
     class Call(val op: Operator, inputs: List<Expr>) : Fun(inputs) {
         override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitOp(this, a)

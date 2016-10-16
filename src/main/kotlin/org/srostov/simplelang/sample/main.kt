@@ -1,7 +1,8 @@
-package org.srostov.simplelang
+package org.srostov.simplelang.sample
 
-import org.srostov.simplelang.visitor.ConstantPropagator
+import org.srostov.simplelang.*
 import org.srostov.simplelang.visitor.eval
+import org.srostov.simplelang.visitor.optimize.ConstantPropagator
 
 interface TplEntry
 

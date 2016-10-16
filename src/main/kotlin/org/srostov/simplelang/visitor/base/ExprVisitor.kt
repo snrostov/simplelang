@@ -1,4 +1,6 @@
-package org.srostov.simplelang
+package org.srostov.simplelang.visitor.base
+
+import org.srostov.simplelang.*
 
 interface ExprVisitor<out R, in T> {
     fun visitConst(x: ConstExpr, a: T): R
