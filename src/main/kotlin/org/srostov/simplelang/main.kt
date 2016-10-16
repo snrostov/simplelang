@@ -1,3 +1,8 @@
+package org.srostov.simplelang
+
+import org.srostov.simplelang.visitor.ConstantPropagator
+import org.srostov.simplelang.visitor.eval
+
 interface TplEntry
 
 
@@ -12,19 +17,19 @@ fun main(args: Array<String>) {
 
         If(
                 i less n,
-                _then = Const("number ")
+                _then = ConstExpr("number ")
                         append i
-                        append Const(", ")
-                        append f(i plus Const(1), n),
-                _else = Const("")
+                        append ConstExpr(", ")
+                        append f(i plus ConstExpr(1), n),
+                _else = ConstExpr("")
         )
     }
 
-    val f1 = f(Const(1), Const(10))
+    val fCall = f(ConstExpr(1), ConstExpr(10))
 
-    val accept = f1.accept(ConstantPropagator(), 1)
+    val accept = fCall.accept(ConstantPropagator(), 1)
 
-    val message = f1.getValue()
+    val message = fCall.eval()
     println(message)
 }
 

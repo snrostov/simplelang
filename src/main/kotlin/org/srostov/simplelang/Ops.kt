@@ -1,16 +1,14 @@
+package org.srostov.simplelang
+
 abstract class Operator() : (List<Any>) -> Any {
     class Call(val op: Operator, inputs: List<Expr>) : Fun(inputs) {
-        override fun <R, T> accept(v: ValueVisitor<R, T>, a: T): R = v.visitOp(this, a)
-
-        override fun eval(c: EvalCtx, vals: List<Any>) = op(vals)
-
-        override fun toString(): String = op.toString(inputs)
+        override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitOp(this, a)
     }
 
     abstract fun toString(inputs: List<Expr>): String
 }
 
-abstract class BinOp<A, B, R>(val symbol: String): Operator() {
+abstract class BinOp<A, B, R>(val symbol: String) : Operator() {
 
     @Suppress("UNCHECKED_CAST")
     override fun invoke(args: List<Any>): Any = invoke(args[0] as A, args[1] as B) as Any

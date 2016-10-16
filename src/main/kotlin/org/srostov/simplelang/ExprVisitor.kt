@@ -1,5 +1,7 @@
-interface ValueVisitor<out R, in T> {
-    fun visitConst(x: Const, a: T): R
+package org.srostov.simplelang
+
+interface ExprVisitor<out R, in T> {
+    fun visitConst(x: ConstExpr, a: T): R
     fun visitIf(x: If, a: T): R
     fun visitCycle(x: Cycle.Call, a: T): R
     fun visitOp(x: Operator.Call, a: T): R
