@@ -2,6 +2,7 @@ package org.srostov.simplelang.visitor
 
 import org.srostov.simplelang.*
 import org.srostov.simplelang.visitor.base.PrinterBase
+import org.srostov.simplelang.visitor.base.print
 
 class Printer : PrinterBase() {
     override fun visitConst(x: ConstExpr, a: Unit) {
@@ -31,7 +32,7 @@ class Printer : PrinterBase() {
         append(")")
     }
 
-    override fun visitUserFunInput(x: UserFun.Input, a: Unit) {
+    override fun visitUserFunInput(x: UserFun.Arg, a: Unit) {
         append("arg")
         append(x.i.toString())
     }
@@ -69,3 +70,4 @@ class Printer : PrinterBase() {
     }
 }
 
+fun Expr.toStr() = print(Printer())

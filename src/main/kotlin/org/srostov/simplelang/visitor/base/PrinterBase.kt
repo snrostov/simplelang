@@ -1,7 +1,6 @@
 package org.srostov.simplelang.visitor.base
 
 import org.srostov.simplelang.Expr
-import org.srostov.simplelang.visitor.base.ExprVisitor
 
 abstract class PrinterBase : ExprVisitor<Unit, Unit> {
     val result: StringBuilder = StringBuilder()
@@ -43,5 +42,10 @@ abstract class PrinterBase : ExprVisitor<Unit, Unit> {
             append(x.toString())
         }
     }
+}
+
+fun Expr.print(p: PrinterBase): String {
+    accept(p, Unit)
+    return p.result.toString();
 }
 

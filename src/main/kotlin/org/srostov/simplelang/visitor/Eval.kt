@@ -4,7 +4,7 @@ import org.srostov.simplelang.*
 import org.srostov.simplelang.visitor.base.ExprVisitor
 import java.util.*
 
-class EvalCtx() {
+private class EvalCtx() {
     val values: MutableMap<VarExpr, Any> = HashMap()
 
     companion object {
@@ -12,7 +12,7 @@ class EvalCtx() {
     }
 }
 
-object Evaluator : ExprVisitor<Any, EvalCtx> {
+private object Evaluator : ExprVisitor<Any, EvalCtx> {
     fun eval(x: Expr, a: EvalCtx) = x.accept(this, a)
 
     fun evalCached(x: Expr, a: EvalCtx) =
@@ -31,7 +31,7 @@ object Evaluator : ExprVisitor<Any, EvalCtx> {
 
     override fun visitUserFun(x: UserFun.Call, a: EvalCtx): Any {
         val ctx = EvalCtx()
-        evalInputs(x, a).forEachIndexed { i, v -> ctx.values[x.f.inputs[i]] = v }
+        evalInputs(x, a).forEachIndexed { i, v -> ctx.values[x.f.args[i]] = v }
         return evalCached(x.f.result, ctx)
     }
 
@@ -54,7 +54,7 @@ object Evaluator : ExprVisitor<Any, EvalCtx> {
 
     override fun visitCycleVar(x: Cycle.Var, a: EvalCtx): Any = a.values[x]!!
 
-    override fun visitUserFunInput(x: UserFun.Input, a: EvalCtx): Any = a.values[x]!!
+    override fun visitUserFunInput(x: UserFun.Arg, a: EvalCtx): Any = a.values[x]!!
 }
 
-fun Expr.eval() = Evaluator.eval(this, EvalCtx())
+fun Expr.eval() = Evaluator.eval(this, EvalCtx.empty)

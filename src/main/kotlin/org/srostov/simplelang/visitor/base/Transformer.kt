@@ -11,10 +11,9 @@ open class Transformer : ExprVisitor<Expr, Any> {
 
     override fun visitConst(x: ConstExpr, a: Any): Expr = x
 
-    override fun visitIf(x: If, a: Any): Expr
-            = If(transform(x.condition), transform(x._then), transform(x._else))
-
     open fun visitFun(x: Fun, create: (List<Expr>) -> Expr): Expr = create(transform(x.inputs))
+
+    override fun visitIf(x: If, a: Any): Expr = visitFun(x) { If(it[0], it[1], it[2]) }
 
     override fun visitCycle(x: Cycle.Call, a: Any): Expr = visitFun(x) { Cycle.Call(x.cycle, it) }
 
@@ -22,7 +21,7 @@ open class Transformer : ExprVisitor<Expr, Any> {
 
     override fun visitUserFun(x: UserFun.Call, a: Any): Expr = visitFun(x) { UserFun.Call(x.f, it) }
 
-    override fun visitUserFunInput(x: UserFun.Input, a: Any): Expr = x
+    override fun visitUserFunInput(x: UserFun.Arg, a: Any): Expr = x
 
     override fun visitCycleVar(x: Cycle.Var, a: Any): Expr = x
 }

@@ -3,17 +3,11 @@ package org.srostov.simplelang.sample
 import org.srostov.simplelang.*
 import org.srostov.simplelang.visitor.eval
 import org.srostov.simplelang.visitor.optimize.ConstantPropagator
-
-interface TplEntry
-
-
-fun applyTpl(tpl: List<TplEntry>, data: List<*>) {
-
-}
+import org.srostov.simplelang.visitor.toStr
 
 fun main(args: Array<String>) {
     val f = UserFun("f", 2) {
-        val (i, n) = inputs
+        val (i, n) = this.args
         val f = this
 
         If(
@@ -28,24 +22,13 @@ fun main(args: Array<String>) {
 
     val fCall = f(ConstExpr(1), ConstExpr(10))
 
-    val accept = fCall.accept(ConstantPropagator(), 1)
+    val simplified = fCall.accept(ConstantPropagator(), 1)
 
     val message = fCall.eval()
+
+    println(fCall.toStr())
     println(message)
+
+    println(simplified.toStr())
+    println(simplified.eval())
 }
-
-fun test(int: Int) {
-    var x = ""
-
-    for (it in 1..int) {
-        x += "number $it!, "
-    }
-
-    println(x)
-}
-
-fun test_recursive(i: Int, max: Int): String =
-        if (i < max) "number $i, " + test_recursive(i + 1, max) else ""
-
-fun test_recursive2(i: Int, max: Int, result: String): String =
-        if (i < max) test_recursive2(i + 1, max, result + "number $i, ") else result

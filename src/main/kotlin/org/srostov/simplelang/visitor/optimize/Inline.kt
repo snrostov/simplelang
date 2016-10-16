@@ -5,7 +5,7 @@ import org.srostov.simplelang.UserFun
 import org.srostov.simplelang.visitor.base.Transformer
 
 class UserFunInliner(val call: UserFun.Call) : Transformer() {
-    override fun visitUserFunInput(x: UserFun.Input, a: Any): Expr {
+    override fun visitUserFunInput(x: UserFun.Arg, a: Any): Expr {
         return call.inputs[x.i]
     }
 }

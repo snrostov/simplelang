@@ -1,3 +1,15 @@
+/**
+ * Expr
+ *      Const
+ *      Var
+ *          Ref
+ *              UserFun.Arg
+ *              Cycle.Var
+ *          Fun
+ *              If
+ *              Cycle
+ *              UserFun
+ */
 package org.srostov.simplelang
 
 import org.srostov.simplelang.visitor.base.ExprVisitor
@@ -15,6 +27,8 @@ class ConstExpr(val v: Any) : Expr() {
 
 }
 
+abstract class RefExpr : VarExpr()
+
 abstract class Fun(val inputs: List<Expr>) : VarExpr() {
     init {
         inputs.forEach {
@@ -23,15 +37,15 @@ abstract class Fun(val inputs: List<Expr>) : VarExpr() {
     }
 }
 
-class If(val condition: Expr, val _then: Expr, val _else: Expr) : VarExpr() {
+class If(val condition: Expr, val _then: Expr, val _else: Expr) : Fun(listOf(condition, _then, _else)) {
     override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitIf(this, a)
 }
 
 class UserFun(val name: String, args: Int, resultBuilder: UserFun.() -> Expr) {
-    val inputs: List<Input> = (0..args).map { Input(this, it) }
+    val args: List<Arg> = (0..args).map { Arg(this, it) }
     val result: Expr = resultBuilder(this)
 
-    class Input(val f: UserFun, val i: Int) : VarExpr() {
+    class Arg(val f: UserFun, val i: Int) : RefExpr() {
         override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitUserFunInput(this, a)
     }
 
@@ -41,7 +55,7 @@ class UserFun(val name: String, args: Int, resultBuilder: UserFun.() -> Expr) {
 }
 
 class Cycle(val condition: Var, val vals: List<Var>, val result: Expr) {
-    class Var(val name: String, val result: VarExpr) : VarExpr() {
+    class Var(val name: String, val result: VarExpr) : RefExpr() {
         override fun toString(): String {
             return name
         }
