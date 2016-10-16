@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cmptest.iml" filepath="$PROJECT_DIR$/.idea/modules/cmptest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cmptest_main.iml" filepath="$PROJECT_DIR$/.idea/modules/cmptest_main.iml" group="cmptest" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cmptest_test.iml" filepath="$PROJECT_DIR$/.idea/modules/cmptest_test.iml" group="cmptest" />
+    </modules>
+  </component>
+</project>
