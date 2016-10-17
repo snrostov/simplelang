@@ -24,4 +24,6 @@ open class Transformer : ExprVisitor<Expr, Any> {
     override fun visitUserFunInput(x: UserFun.Arg, a: Any): Expr = x
 
     override fun visitCycleVar(x: Cycle.Var, a: Any): Expr = x
+
+    override fun visitUnknownExpr(x: UnknownExpr, a: Any) = x
 }

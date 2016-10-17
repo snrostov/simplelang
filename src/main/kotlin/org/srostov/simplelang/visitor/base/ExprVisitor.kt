@@ -11,4 +11,6 @@ interface ExprVisitor<out R, in T> {
 
     fun visitUserFunInput(x: UserFun.Arg, a: T): R
     fun visitCycleVar(x: Cycle.Var, a: T): R
+
+    fun visitUnknownExpr(x: UnknownExpr, a: T): R
 }

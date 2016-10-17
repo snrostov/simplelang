@@ -15,7 +15,7 @@ package org.srostov.simplelang
 import org.srostov.simplelang.visitor.base.ExprVisitor
 
 abstract class Expr {
-    abstract fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R
+    abstract fun <R, T> accept(v: ExprVisitor<R, T>, a: T = Unit as T): R
 }
 
 abstract class VarExpr : Expr() {
@@ -66,4 +66,8 @@ class Cycle(val condition: Var, val vals: List<Var>, val result: Expr) {
     class Call(val cycle: Cycle, inputs: List<Expr>) : Fun(inputs) {
         override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitCycle(this, a)
     }
+}
+
+class UnknownExpr(val name: String) : RefExpr() {
+    override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitUnknownExpr(this, a)
 }

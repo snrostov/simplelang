@@ -1,13 +1,14 @@
 package org.srostov.simplelang
 
 import org.srostov.simplelang.visitor.base.ExprVisitor
+import org.srostov.simplelang.visitor.base.PrinterBase
 
 abstract class Operator() : (List<Any>) -> Any {
     class Call(val op: Operator, inputs: List<Expr>) : Fun(inputs) {
         override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitOp(this, a)
     }
 
-    abstract fun toString(inputs: List<Expr>): String
+    abstract fun toString(inputs: List<Expr>, p: PrinterBase)
 }
 
 abstract class UnOp<A, R>(val symbol: String) : Operator() {
@@ -16,7 +17,11 @@ abstract class UnOp<A, R>(val symbol: String) : Operator() {
 
     abstract fun invokeUn(a: A): R
 
-    override fun toString(inputs: List<Expr>): String = "$symbol ${inputs[0]}"
+    override fun toString(inputs: List<Expr>, p: PrinterBase) {
+        p.append(symbol)
+        p.append(" ")
+        p.appendExpr(inputs[0])
+    }
 }
 
 abstract class BinOp<A, B, R>(val symbol: String) : Operator() {
@@ -25,7 +30,13 @@ abstract class BinOp<A, B, R>(val symbol: String) : Operator() {
 
     abstract fun invoke(a: A, b: B): R
 
-    override fun toString(inputs: List<Expr>): String = "${inputs[0]} $symbol ${inputs[1]}"
+    override fun toString(inputs: List<Expr>, p: PrinterBase) {
+        p.appendExpr(inputs[0])
+        p.append(" ")
+        p.append(symbol)
+        p.append(" ")
+        p.appendExpr(inputs[1])
+    }
 }
 
 interface Commutative
@@ -78,20 +89,20 @@ object Mod : BinOp<Int, Int, Int>("%") {
     override fun invoke(a: Int, b: Int): Int = a % b
 }
 
-object Group : Operator() {
-    override fun toString(inputs: List<Expr>): String = "[${inputs.joinToString()}]"
-
-    override fun invoke(args: List<Any>): Any = args
-}
-
-object Get : Operator() {
-    override fun toString(inputs: List<Expr>): String = "${inputs[0]}[${inputs[1]}]"
-
-    override fun invoke(args: List<Any>): Any = (args[0] as List<*>)[args[1] as Int]!!
-}
-
-object GroupLength : Operator() {
-    override fun toString(inputs: List<Expr>): String = "${inputs[0]}.size"
-
-    override fun invoke(args: List<Any>): Any = (args[0] as List<*>).size
-}
+//object Group : Operator() {
+//    override fun toString(inputs: List<Expr>): String = "[${inputs.joinToString()}]"
+//
+//    override fun invoke(args: List<Any>): Any = args
+//}
+//
+//object Get : Operator() {
+//    override fun toString(inputs: List<Expr>): String = "${inputs[0]}[${inputs[1]}]"
+//
+//    override fun invoke(args: List<Any>): Any = (args[0] as List<*>)[args[1] as Int]!!
+//}
+//
+//object GroupLength : Operator() {
+//    override fun toString(inputs: List<Expr>): String = "${inputs[0]}.size"
+//
+//    override fun invoke(args: List<Any>): Any = (args[0] as List<*>).size
+//}

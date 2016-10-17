@@ -1,5 +1,8 @@
 Simple programming language for learning compiler theory
 
+See samples in [tests](https://github.com/snrostov/simplelang/tree/master/src/test/kotlin/org/srostov/simplelang/visitor/optimize).
+
+Brief description 
   - [x] [Model](src/main/kotlin/org/srostov/simplelang/Model.kt) - Point to start
   - [x] [Visitor]() - Main logic
       - [x] [Eval]() - Evaluate program

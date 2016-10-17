@@ -55,6 +55,8 @@ private object Evaluator : ExprVisitor<Any, EvalCtx> {
     override fun visitCycleVar(x: Cycle.Var, a: EvalCtx): Any = a.values[x]!!
 
     override fun visitUserFunInput(x: UserFun.Arg, a: EvalCtx): Any = a.values[x]!!
+
+    override fun visitUnknownExpr(x: UnknownExpr, a: EvalCtx): Any = "unknown"
 }
 
 fun Expr.eval() = Evaluator.eval(this, EvalCtx.empty)

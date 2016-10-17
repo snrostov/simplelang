@@ -11,15 +11,15 @@ class Printer : PrinterBase() {
 
     override fun visitIf(x: If, a: Unit) {
         append("if (")
-        append(x)
+        appendExpr(x.condition)
         append(") ")
-        append(x._then)
+        appendExpr(x._then)
         append(" else ")
-        append(x._else)
+        appendExpr(x._else)
     }
 
     override fun visitOp(x: Operator.Call, a: Unit) {
-        append(x.op.toString(x.inputs))
+        x.op.toString(x.inputs, this)
     }
 
     override fun visitUserFun(x: UserFun.Call, a: Unit) {
@@ -27,7 +27,7 @@ class Printer : PrinterBase() {
         append("(")
         x.inputs.forEachIndexed { i, expr ->
             if (i > 0) append(",")
-            append(expr)
+            appendExpr(expr)
         }
         append(")")
     }
@@ -43,7 +43,7 @@ class Printer : PrinterBase() {
                 append("var ")
                 append(it.name)
                 append(" = ")
-                append(x.inputs[i])
+                appendExpr(x.inputs[i])
             }
         }
         line {
@@ -54,18 +54,22 @@ class Printer : PrinterBase() {
                 line {
                     append(it.name)
                     append(" = ")
-                    append(it.result)
+                    appendExpr(it.result)
                 }
             }
         }
         line {
             append("} while (")
-            append(x.cycle.condition)
+            appendExpr(x.cycle.condition)
             append(")")
         }
     }
 
     override fun visitCycleVar(x: Cycle.Var, a: Unit) {
+        append(x.name)
+    }
+
+    override fun visitUnknownExpr(x: UnknownExpr, a: Unit) {
         append(x.name)
     }
 }

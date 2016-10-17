@@ -4,9 +4,9 @@ fun Operator.newCall(vararg args: Expr) = Operator.Call(this, args.toList())
 
 operator fun UserFun.invoke(vararg args: Expr) = UserFun.Call(this, args.toList())
 
-operator fun Expr.get(index: Expr) = Get.newCall(index)
-
-val Expr.length: Expr get() = GroupLength.newCall(this)
+//operator fun Expr.get(index: Expr) = Get.newCall(index)
+//
+//val Expr.length: Expr get() = GroupLength.newCall(this)
 
 infix fun Expr.plus(b: Expr) = Plus.newCall(this, b)
 
@@ -14,7 +14,7 @@ infix fun Expr.append(b: Expr) = Append.newCall(this, b)
 
 infix fun Expr.less(b: Expr): Expr = Less.newCall(this, b)
 
-fun group(vararg items: Expr) = Group(items.toList())
+//fun group(vararg items: Expr) = Group(items.toList())
 
 fun cycle(b: CycleBuilder.() -> Expr): Expr {
     val b1 = CycleBuilder()

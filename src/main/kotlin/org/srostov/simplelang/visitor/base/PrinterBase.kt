@@ -25,7 +25,7 @@ abstract class PrinterBase : ExprVisitor<Unit, Unit> {
         }
     }
 
-    fun append(x: Expr) {
+    fun appendExpr(x: Expr) {
         x.accept(this, Unit)
     }
 

@@ -9,3 +9,5 @@ class UserFunInliner(val call: UserFun.Call) : Transformer() {
         return call.inputs[x.i]
     }
 }
+
+fun UserFun.Call.inline(): Expr = f.result.accept(UserFunInliner(this))
