@@ -24,3 +24,4 @@ Simple programming language for learning compiler theory
       - [ ] [Emit]() - Machine code generation
           - [ ] [RegAlloc]() - Register allocation
           - [ ] [x86_64]() - Transform operations to x86_64 instructions
+
