@@ -13,4 +13,10 @@ class ConstantPropagator : Transformer() {
     }
 }
 
-private fun isConsts(inputs: List<Expr>) = inputs.map { it is ConstExpr }.reduce { a, b -> a && b }
+private fun isConsts(inputs: List<Expr>): Boolean {
+    inputs.forEach {
+        if (it !is ConstExpr) return false
+    }
+
+    return true
+}

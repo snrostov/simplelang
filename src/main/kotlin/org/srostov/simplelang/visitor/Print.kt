@@ -10,12 +10,27 @@ class Printer : PrinterBase() {
     }
 
     override fun visitIf(x: If, a: Unit) {
-        append("if (")
-        appendExpr(x.condition)
-        append(") ")
-        appendExpr(x._then)
-        append(" else ")
-        appendExpr(x._else)
+        append("\n")
+        line {
+            append("if (")
+            appendExpr(x.condition)
+            append(") {")
+        }
+        indent {
+            line {
+                appendExpr(x._then)
+            }
+        }
+        line {
+            append("} else {")
+        }
+        indent {
+            line {
+                appendExpr(x._else)
+            }
+        }
+        appendLineIndent()
+        append("}")
     }
 
     override fun visitOp(x: Operator.Call, a: Unit) {
@@ -26,7 +41,7 @@ class Printer : PrinterBase() {
         append(x.f.name)
         append("(")
         x.inputs.forEachIndexed { i, expr ->
-            if (i > 0) append(",")
+            if (i > 0) append(", ")
             appendExpr(expr)
         }
         append(")")

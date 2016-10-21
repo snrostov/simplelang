@@ -1,8 +1,22 @@
-Simple programming language for learning compiler theory
+## SimpleLang
 
-See samples in [tests](https://github.com/snrostov/simplelang/tree/master/src/test/kotlin/org/srostov/simplelang/visitor/optimize).
+Simple programming language for learning compiler theory.
 
-Brief description 
+### Model
+
+All expression is pure functions (result of function is defined only by arguments, no side effect).
+Constant is function with 0 args.
+Conditional expression and operators are base functions: `+`, `-`, `*`, `/`, `%`, `and`, `or`, `not`, `>`, `=`, `<`.
+All other expression is based on them.
+User functions can be recursive. 
+Cycle is special case for recursive tail call.
+
+### Examples
+
+See examples in [tests](https://github.com/snrostov/simplelang/tree/master/src/test/kotlin/org/srostov/simplelang/visitor/optimize).
+
+### Table of contents
+ 
   - [x] [Model](src/main/kotlin/org/srostov/simplelang/Model.kt) - Point to start
   - [x] [Visitor]() - Main logic
       - [x] [Eval]() - Evaluate program

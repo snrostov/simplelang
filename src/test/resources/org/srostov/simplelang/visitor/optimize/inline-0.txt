@@ -1,0 +1,6 @@
+
+if (arg0 < arg1) {
+  "number " append arg0 append ", " append f(arg0 + 1, arg1)
+} else {
+  ""
+}

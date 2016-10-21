@@ -1,14 +1,18 @@
 /**
- * Expr
- *      Const
- *      Var
- *          Ref
- *              UserFun.Arg
- *              Cycle.Var
- *          Fun
- *              If
- *              Cycle
- *              UserFun
+ * Общая иеерархия:
+ *
+ * Expr - Любое выражение
+ *      Const - Константа
+ *      Var - Выражение значение которого не известно на этапе компиляции
+ *          Ref - Ссылка на входящий параметр
+ *              UserFun.Arg - Параметр пользовательской функции
+ *              Cycle.Var   - Переменная, значение которой обновляется в цикле
+ *              UnknownExpr - Используется для дебага
+ *          Fun - Выражение, значение котрого зависит от входных параметров
+ *              Op.Call - Базовая операция (вызов оператора)
+ *              If - Выражение значение котрого зависит от указанного условия
+ *              UserFun.Call - Вызов пользовательской функции
+ *              Cycle.Call - Функция выполняещеся в цикле (частный случай функции)
  */
 package org.srostov.simplelang
 
@@ -43,7 +47,7 @@ class If(val condition: Expr, val _then: Expr, val _else: Expr) : Fun(listOf(con
 
 class UserFun(val name: String, args: Int, resultBuilder: UserFun.() -> Expr) {
     val args: List<Arg> = (0..args).map { Arg(this, it) }
-    val result: Expr = resultBuilder(this)
+    var result: Expr = resultBuilder(this)
 
     class Arg(val f: UserFun, val i: Int) : RefExpr() {
         override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitUserFunInput(this, a)

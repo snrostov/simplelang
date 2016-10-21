@@ -1,0 +1,5 @@
+if (0 < N) {
+  "number 0, " append f(1, N)
+} else {
+  ""
+}

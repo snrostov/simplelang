@@ -19,9 +19,8 @@ abstract class PrinterBase : ExprVisitor<Unit, Unit> {
     }
 
     fun appendLineIndent() {
-        result.append("\n")
-        (0..indent).forEach {
-            result.append(" ")
+        (0..indent-1).forEach {
+            result.append("  ")
         }
     }
 

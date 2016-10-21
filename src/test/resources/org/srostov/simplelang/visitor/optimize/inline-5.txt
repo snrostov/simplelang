@@ -1,0 +1,30 @@
+if (0 < N) {
+  "number 0, " append
+  if (1 < N) {
+    "number 1, " append
+    if (2 < N) {
+      "number 2, " append
+      if (3 < N) {
+        "number 3, " append
+        if (4 < N) {
+          "number 4, " append
+          if (5 < N) {
+            "number 5, " append f(6, N)
+          } else {
+            ""
+          }
+        } else {
+          ""
+        }
+      } else {
+        ""
+      }
+    } else {
+      ""
+    }
+  } else {
+    ""
+  }
+} else {
+  ""
+}
