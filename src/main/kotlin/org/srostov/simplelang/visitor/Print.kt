@@ -51,8 +51,8 @@ class Printer : PrinterBase() {
         append(x.name)
     }
 
-    override fun visitCycle(x: Cycle.Call, a: Unit) {
-        x.cycle.vals.forEachIndexed { i, it ->
+    override fun visitLoop(x: Loop.Call, a: Unit) {
+        x.loop.vals.forEachIndexed { i, it ->
             line {
                 append("var ")
                 append(it.name)
@@ -64,7 +64,7 @@ class Printer : PrinterBase() {
             append("do { ")
         }
         indent {
-            x.cycle.vals.forEach {
+            x.loop.vals.forEach {
                 line {
                     append(it.name)
                     append(" = ")
@@ -74,12 +74,12 @@ class Printer : PrinterBase() {
         }
         line {
             append("} while (")
-            appendExpr(x.cycle.condition)
+            appendExpr(x.loop.condition)
             append(")")
         }
     }
 
-    override fun visitCycleVar(x: Cycle.Var, a: Unit) {
+    override fun visitLoopVar(x: Loop.Var, a: Unit) {
         append(x.name)
     }
 

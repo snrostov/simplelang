@@ -35,24 +35,24 @@ private object Evaluator : ExprVisitor<Any, EvalCtx> {
         return evalCached(x.f.result, ctx)
     }
 
-    override fun visitCycle(x: Cycle.Call, a: EvalCtx): Any {
+    override fun visitLoop(x: Loop.Call, a: EvalCtx): Any {
         fun setVarsVal(c: EvalCtx, vals: List<Any>) {
-            vals.forEachIndexed { i, v -> c.values[x.cycle.vals[i]] = v }
+            vals.forEachIndexed { i, v -> c.values[x.loop.vals[i]] = v }
         }
 
         val vals = evalInputs(x, a)
         setVarsVal(a, vals)
         val nextVals = ArrayList(vals)
-        while (x.cycle.condition.accept(this, a) == true) {
+        while (x.loop.condition.accept(this, a) == true) {
             vals.forEachIndexed { i, v ->
-                nextVals[i] = eval(x.cycle.vals[i].result, a)
+                nextVals[i] = eval(x.loop.vals[i].result, a)
             }
             setVarsVal(a, nextVals)
         }
-        return eval(x.cycle.result, a)
+        return eval(x.loop.result, a)
     }
 
-    override fun visitCycleVar(x: Cycle.Var, a: EvalCtx): Any = a.values[x]!!
+    override fun visitLoopVar(x: Loop.Var, a: EvalCtx): Any = a.values[x]!!
 
     override fun visitUserFunInput(x: UserFun.Arg, a: EvalCtx): Any = a.values[x]!!
 

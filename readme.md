@@ -7,9 +7,10 @@ Simple programming language for learning compiler theory.
 All expressions is pure functions (result of function is defined only by arguments, no side effect).
 Constant is function with 0 args.
 Conditional expression and operators `+`, `-`, `*`, `/`, `%`, `and`, `or`, `not`, `>`, `=`, `<` are base functions.
-All other expression is composition of function calls.
+All other expression is composition of base function calls.
+Expressions may be extracted to user functions.
 User functions can be recursive. 
-Cycle is special case for recursive tail call.
+Loop is special case for recursive tail call of user function.
 
 ### Examples
 

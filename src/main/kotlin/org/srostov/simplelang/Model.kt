@@ -20,7 +20,7 @@ import org.srostov.simplelang.visitor.base.ExprVisitor
 import org.srostov.simplelang.visitor.toStr
 
 abstract class Expr {
-    abstract fun <R, T> accept(v: ExprVisitor<R, T>, a: T = Unit as T): R
+    abstract fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R
 
     override fun toString(): String = this.toStr()
 }
@@ -61,17 +61,17 @@ class UserFun(val name: String, vararg args: String, resultBuilder: UserFun.() -
     }
 }
 
-class Cycle(val condition: Var, val vals: List<Var>, val result: Expr) {
+class Loop(val condition: Var, val vals: List<Var>, val result: Expr) {
     class Var(val name: String, val result: VarExpr) : RefExpr() {
         override fun toString(): String {
             return name
         }
 
-        override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitCycleVar(this, a)
+        override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitLoopVar(this, a)
     }
 
-    class Call(val cycle: Cycle, inputs: List<Expr>) : Fun(inputs) {
-        override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitCycle(this, a)
+    class Call(val loop: Loop, inputs: List<Expr>) : Fun(inputs) {
+        override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitLoop(this, a)
     }
 }
 

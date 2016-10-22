@@ -13,17 +13,17 @@ class InlineTest2 : BaseTest() {
         If(
                 i less n,
                 _then = f(
-                        i plus ConstExpr(1),
+                        i + 1.asConst,
                         n,
-                        result append ConstExpr("number ")
+                        result append "number ".asConst
                                 append i
-                                append ConstExpr(", ")
+                                append ", ".asConst
                 ),
                 _else = result
         )
     }
 
-    val call = f(ConstExpr(0), UnknownExpr("N"), ConstExpr(""))
+    val call = f(0.asConst, UnknownExpr("N"), "".asConst)
 
     @Test
     fun test0() = Assert.assertEquals(resource("0"), f.result.toStr())

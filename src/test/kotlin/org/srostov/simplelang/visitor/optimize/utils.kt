@@ -15,7 +15,7 @@ fun String.trimLines(): String =
 fun testInline(call: UserFun.Call, depth: Int, excepted: String) {
     val actual = call
             .inlineRecursive(depth)
-            .accept(ConstantPropagator())
+            .accept(ConstantPropagator(), Unit)
             .toStr()
             .trimLines()
             .trim()

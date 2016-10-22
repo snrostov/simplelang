@@ -1,43 +1,46 @@
-@file:Suppress("NAME_SHADOWING")
-
 package org.srostov.simplelang.visitor.optimize
 
 import org.srostov.simplelang.*
+import org.srostov.simplelang.visitor.Pattern
 import org.srostov.simplelang.visitor.base.Transformer
-import java.util.function.BinaryOperator
 
-class OpsOptimizer : Transformer() {
-    override fun visitOp(x: Operator.Call, a: Any): Expr = with(x) {
-        if (op is BinaryOperator<*>) {
-            var (a, b) = inputs
+object OptOptimizePatterns {
+    val a = UnknownExpr("a")
+    val b = UnknownExpr("b")
+    val c = UnknownExpr("c")
+    val c0 = 0.asConst
+    val c1 = 1.asConst
 
-            if (op is Commutative) {
-                // a - simple val, b - fun
-                if (a is Fun && b !is Fun) {
-                    val t = b; b = a; a = t // swap
+    val leafReplacements = listOf(
+            Pattern(a + c0, a),
+            Pattern(a - a, c0),
+            Pattern(a * c1, a),
+            Pattern(a * c0, c0),
+            Pattern(a / c1, a),
+            Pattern(c0 * a, c0)
+    )
+
+    val variantsReplacements = listOf(
+            Pattern(a + b, b + a),
+            Pattern(a * b, b * a),
+            Pattern((a + b) + c, a + (b + c)),
+            Pattern(a * (b + c), a * b + a * c)
+    )
+}
+
+class OpsOptimizer : Transformer<Unit>() {
+    override fun visitOp(x: Operator.Call, a: Unit): Expr = with(x) {
+        val transformed = super.visitOp(x, a)
+
+        if (transformed is Operator.Call) {
+            OptOptimizePatterns.leafReplacements.forEach {
+                val match = it.match(transformed)
+                if (match != null) {
+                    return match.transform(it.cause)
                 }
-            }
-
-            if (op is Plus) {
-                if (a is ConstExpr && a.v == 0) return transform(b)
-            }
-
-            if (op is Minus) {
-                if (a == b) return ConstExpr(0)
-                if (b is ConstExpr && b.v == 0) return transform(b)
-            }
-
-            if (op is Mul) {
-                if (a is ConstExpr && a.v == 0) return transform(ConstExpr(0))
-                if (a is ConstExpr && a.v == 1) return transform(b)
-            }
-
-            if (op is Div) {
-                if (a == b) return ConstExpr(1)
-                if (b is ConstExpr && b.v == 1) return transform(a)
             }
         }
 
-        return super.visitOp(x, a)
+        return transformed
     }
 }
