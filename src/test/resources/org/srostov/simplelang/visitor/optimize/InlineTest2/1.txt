@@ -1,5 +1,3 @@
-if (0 < N) {
-  f(1, N, "number 0, ")
-} else {
-  ""
-}
+if 0 < N
+  then f(1, N, "number 0, ")
+  else ""

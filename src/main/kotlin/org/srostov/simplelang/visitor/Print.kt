@@ -9,77 +9,21 @@ class Printer : PrinterBase() {
         appendConst(x.v)
     }
 
-    override fun visitIf(x: If, a: Unit) {
-        append("\n")
-        line {
-            append("if (")
-            appendExpr(x.condition)
-            append(") {")
-        }
-        indent {
-            line {
-                appendExpr(x._then)
+    override fun visitFunCall(x: FunCall, a: Unit) {
+        if (x.f is UserFun) {
+            append(x.f.name)
+            append("(")
+            x.inputs.forEachIndexed { i, expr ->
+                if (i > 0) append(", ")
+                appendExpr(expr)
             }
+            append(")")
+        } else {
+            (x.f as BaseFun).print(x.inputs, this)
         }
-        line {
-            append("} else {")
-        }
-        indent {
-            line {
-                appendExpr(x._else)
-            }
-        }
-        appendLineIndent()
-        append("}")
-    }
-
-    override fun visitOp(x: Operator.Call, a: Unit) {
-        x.op.toString(x.inputs, this)
-    }
-
-    override fun visitUserFun(x: UserFun.Call, a: Unit) {
-        append(x.f.name)
-        append("(")
-        x.inputs.forEachIndexed { i, expr ->
-            if (i > 0) append(", ")
-            appendExpr(expr)
-        }
-        append(")")
     }
 
     override fun visitUserFunInput(x: UserFun.Arg, a: Unit) {
-        append(x.name)
-    }
-
-    override fun visitLoop(x: Loop.Call, a: Unit) {
-        x.loop.vals.forEachIndexed { i, it ->
-            line {
-                append("var ")
-                append(it.name)
-                append(" = ")
-                appendExpr(x.inputs[i])
-            }
-        }
-        line {
-            append("do { ")
-        }
-        indent {
-            x.loop.vals.forEach {
-                line {
-                    append(it.name)
-                    append(" = ")
-                    appendExpr(it.result)
-                }
-            }
-        }
-        line {
-            append("} while (")
-            appendExpr(x.loop.condition)
-            append(")")
-        }
-    }
-
-    override fun visitLoopVar(x: Loop.Var, a: Unit) {
         append(x.name)
     }
 

@@ -4,12 +4,11 @@ Simple programming language for learning compiler theory.
 
 ### Model
 
-All expressions is pure functions (result of function is defined only by arguments, no side effect).
+All expressions is pure functions calls (result of function is defined only by arguments, no side effect).
 Constant is function with 0 args.
 Conditional expression and operators `+`, `-`, `*`, `/`, `%`, `and`, `or`, `not`, `>`, `=`, `<` are base functions.
 All other expression is composition of base function calls.
-Expressions may be extracted to user functions.
-User functions can be recursive. 
+Expressions may be extracted to user functions, which can be called himself recursive.
 Loop is special case for recursive tail call of user function.
 
 ### Examples

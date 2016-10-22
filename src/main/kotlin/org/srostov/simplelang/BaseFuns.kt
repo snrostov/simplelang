@@ -1,36 +1,53 @@
 package org.srostov.simplelang
 
-import org.srostov.simplelang.visitor.base.ExprVisitor
 import org.srostov.simplelang.visitor.base.PrinterBase
 
-abstract class Operator() : (List<Any>) -> Any {
-    class Call(val op: Operator, inputs: List<Expr>) : Fun(inputs) {
-        override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitOp(this, a)
-    }
+object If : BaseFun(3) {
+    override fun invoke(p1: List<Any>): Any = if (p1[0] == true) p1[1] else p1[2]
 
-    abstract fun toString(inputs: List<Expr>, p: PrinterBase)
+    override fun toString(): String = "if 0 then 1 else 2"
+
+    override fun print(inputs: List<Expr>, p: PrinterBase) {
+        with(p) {
+            append("\n")
+            line {
+                append("if ")
+                appendExpr(inputs[0])
+            }
+            indent {
+                line {
+                    append("then ")
+                    indent { appendExpr(inputs[1]) }
+                }
+                line {
+                    append("else ")
+                    indent { appendExpr(inputs[2]) }
+                }
+            }
+        }
+    }
 }
 
-abstract class UnOp<A, R>(val symbol: String) : Operator() {
+abstract class UnOp<A, R>(val symbol: String) : BaseFun(1) {
     @Suppress("UNCHECKED_CAST")
     override fun invoke(args: List<Any>): Any = invokeUn(args[0] as A) as Any
 
     abstract fun invokeUn(a: A): R
 
-    override fun toString(inputs: List<Expr>, p: PrinterBase) {
+    override fun print(inputs: List<Expr>, p: PrinterBase) {
         p.append(symbol)
         p.append(" ")
         p.appendExpr(inputs[0])
     }
 }
 
-abstract class BinOp<A, B, R>(val symbol: String) : Operator() {
+abstract class BinOp<A, B, R>(val symbol: String) : BaseFun(2) {
     @Suppress("UNCHECKED_CAST")
     override fun invoke(args: List<Any>): Any = invoke(args[0] as A, args[1] as B) as Any
 
     abstract fun invoke(a: A, b: B): R
 
-    override fun toString(inputs: List<Expr>, p: PrinterBase) {
+    override fun print(inputs: List<Expr>, p: PrinterBase) {
         p.appendExpr(inputs[0])
         p.append(" ")
         p.append(symbol)

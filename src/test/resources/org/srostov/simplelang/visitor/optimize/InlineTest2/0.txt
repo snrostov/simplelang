@@ -1,6 +1,4 @@
 
-if (i < n) {
-  f(i + 1, n, result append "number " append i append ", ")
-} else {
-  result
-}
+if i < n
+  then f(i + 1, n, result append "number " append i append ", ")
+  else result

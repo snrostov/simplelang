@@ -40,18 +40,16 @@ object OptOptimizePatterns {
     )
 }
 
-class OpsOptimizer : Transformer<Unit>() {
-
-
-    override fun visitOp(x: Operator.Call, a: Unit): Expr = with(x) {
+class PatternsApplyer : Transformer<Unit>() {
+    override fun visitFunCall(x: FunCall, a: Unit): Expr {
         return tryVariant(x)
     }
 
-    private fun tryVariant(call: Operator.Call, depth: Int = 1): Expr {
+    private fun tryVariant(call: FunCall, depth: Int = 1): Expr {
         if (depth > 5) return call
 
-        val t = super.visitOp(call, Unit)
-        if (t is Operator.Call) {
+        val t = super.visitFunCall(call, Unit)
+        if (t is FunCall) {
             OptOptimizePatterns.leafReplacements.forEach {
                 val match = it.match(t)
                 if (match != null) {
@@ -62,7 +60,7 @@ class OpsOptimizer : Transformer<Unit>() {
             OptOptimizePatterns.variantsReplacements.forEach {
                 val match = it.match(t)
                 if (match != null) {
-                    return tryVariant(match.transform(it.cause) as Operator.Call, depth + 1)
+                    return tryVariant(match.transform(it.cause) as FunCall, depth + 1)
                 }
             }
         }

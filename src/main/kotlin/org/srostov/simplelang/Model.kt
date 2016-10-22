@@ -17,6 +17,7 @@
 package org.srostov.simplelang
 
 import org.srostov.simplelang.visitor.base.ExprVisitor
+import org.srostov.simplelang.visitor.base.PrinterBase
 import org.srostov.simplelang.visitor.toStr
 
 abstract class Expr {
@@ -26,29 +27,30 @@ abstract class Expr {
 }
 
 abstract class VarExpr : Expr() {
-    val usages: MutableList<Fun> = arrayListOf()
+    val usages: MutableList<FunCall> = arrayListOf()
 }
 
 class ConstExpr(val v: Any) : Expr() {
     override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitConst(this, a)
-
 }
 
 abstract class RefExpr : VarExpr()
 
-abstract class Fun(val inputs: List<Expr>) : VarExpr() {
+class FunCall(val f: Fun, val inputs: List<Expr>) : VarExpr() {
     init {
-        inputs.forEach {
-            if (it is VarExpr) it.usages.add(this)
-        }
+        require(inputs.size == f.arity) { "Incorrect call of $f with (${inputs.joinToString()})" }
     }
+
+    override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitFunCall(this, a)
 }
 
-class If(val condition: Expr, val _then: Expr, val _else: Expr) : Fun(listOf(condition, _then, _else)) {
-    override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitIf(this, a)
+abstract class Fun(val arity: Int)
+
+abstract class BaseFun(arity: Int) : Fun(arity), (List<Any>) -> Any {
+    abstract fun print(inputs: List<Expr>, p: PrinterBase)
 }
 
-class UserFun(val name: String, vararg args: String, resultBuilder: UserFun.() -> Expr) {
+class UserFun(val name: String, vararg args: String, resultBuilder: UserFun.() -> Expr) : Fun(args.size) {
     val args: List<Arg> = args.mapIndexed { i, s -> Arg(this, i, s) }
     var result: Expr = resultBuilder(this)
 
@@ -56,23 +58,7 @@ class UserFun(val name: String, vararg args: String, resultBuilder: UserFun.() -
         override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitUserFunInput(this, a)
     }
 
-    class Call(val f: UserFun, inputs: List<Expr>) : Fun(inputs) {
-        override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitUserFun(this, a)
-    }
-}
-
-class Loop(val condition: Var, val vals: List<Var>, val result: Expr) {
-    class Var(val name: String, val result: VarExpr) : RefExpr() {
-        override fun toString(): String {
-            return name
-        }
-
-        override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitLoopVar(this, a)
-    }
-
-    class Call(val loop: Loop, inputs: List<Expr>) : Fun(inputs) {
-        override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitLoop(this, a)
-    }
+    override fun toString(): String = "$name(${args.joinToString()})"
 }
 
 class UnknownExpr(val name: String) : RefExpr() {

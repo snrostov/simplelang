@@ -5,7 +5,7 @@ import org.junit.Test
 import org.srostov.simplelang.*
 import org.srostov.simplelang.visitor.toStr
 
-class OpsOptimizerTest : BaseTest() {
+class PatternsApplyerTest : BaseTest() {
     val x = UnknownExpr("x")
     val y = UnknownExpr("y")
 
@@ -19,5 +19,5 @@ class OpsOptimizerTest : BaseTest() {
     @Test
     fun test3() = Assert.assertEquals("y * x", optimize(x * (0.asConst + y)))
 
-    private fun optimize(expr: Expr) = expr.accept(OpsOptimizer(), Unit).toStr()
+    private fun optimize(expr: Expr) = expr.accept(PatternsApplyer(), Unit).toStr()
 }

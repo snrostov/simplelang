@@ -12,14 +12,14 @@ class InlineTest2 : BaseTest() {
 
         If(
                 i less n,
-                _then = f(
+                f(
                         i + 1.asConst,
                         n,
                         result append "number ".asConst
                                 append i
                                 append ", ".asConst
                 ),
-                _else = result
+                result
         )
     }
 

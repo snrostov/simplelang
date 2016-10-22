@@ -20,7 +20,10 @@ class Pattern(val match: Expr, val cause: Expr) {
 
         override fun visitConst(x: ConstExpr, a: Expr): Boolean = a is ConstExpr && a.v == x.v
 
-        private fun visitInputs(patternInputs: List<Expr>, targetInputs: List<Expr>): Boolean {
+        /**
+         * @return true, если все аргрументы соотвествуют шаблону
+         */
+        private fun matchInputs(patternInputs: List<Expr>, targetInputs: List<Expr>): Boolean {
             patternInputs.forEachIndexed { i, patternInput ->
                 val targetInput = targetInputs[i]
                 if (!patternInput.accept(this, targetInput)) {
@@ -31,14 +34,8 @@ class Pattern(val match: Expr, val cause: Expr) {
             return true
         }
 
-        override fun visitOp(x: Operator.Call, a: Expr): Boolean
-                = a is Operator.Call && a.op == x.op && visitInputs(x.inputs, a.inputs)
-
-        override fun visitUserFun(x: UserFun.Call, a: Expr): Boolean
-                = a is UserFun.Call && a.f == x.f && visitInputs(x.inputs, a.inputs)
-
-        override fun visitIf(x: If, a: Expr): Boolean
-                = a is If && x.condition.accept(this, a) && x._then.accept(this, a) && x._else.accept(this, a)
+        override fun visitFunCall(x: FunCall, a: Expr): Boolean
+            = a is FunCall && x.f == a.f && matchInputs(x.inputs, a.inputs)
 
         override fun visitUserFunInput(x: UserFun.Arg, a: Expr): Boolean = throw IllegalStateException()
 
@@ -46,9 +43,5 @@ class Pattern(val match: Expr, val cause: Expr) {
             matches[x] = a
             return true
         }
-
-        override fun visitLoop(x: Loop.Call, a: Expr): Boolean = throw UnsupportedOperationException()
-
-        override fun visitLoopVar(x: Loop.Var, a: Expr): Boolean = throw UnsupportedOperationException()
     }
 }
