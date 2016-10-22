@@ -19,7 +19,7 @@ class InlineTest2 : BaseTest() {
                                 append i
                                 append ConstExpr(", ")
                 ),
-                _else = ConstExpr("")
+                _else = result
         )
     }
 
