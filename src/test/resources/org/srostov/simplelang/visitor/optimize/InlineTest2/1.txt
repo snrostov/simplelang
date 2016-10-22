@@ -1,5 +1,5 @@
 if (0 < N) {
   f(1, N, "number 0, ")
 } else {
-  ""
+  "number 0, "
 }

@@ -6,7 +6,7 @@ import org.srostov.simplelang.*
 import org.srostov.simplelang.visitor.toStr
 
 class InlineTest1 : BaseTest() {
-    val f = UserFun("f", "i", "n") {
+    val f: UserFun = UserFun("f", "i", "n") {
         val (i, n) = this.args
         val f = this
 
@@ -20,26 +20,14 @@ class InlineTest1 : BaseTest() {
         )
     }
 
-    private fun inline(depth: Int, excepted: String) {
-        val call = f(ConstExpr(0), UnknownExpr("N"))
-                .inlineRecursive(depth)
-                .accept(ConstantPropagator())
-                .toStr()
-                .trimLines()
-                .trim()
-
-        Assert.assertEquals(
-                excepted.trim(),
-                call
-        )
-    }
+    val call = f(ConstExpr(0), UnknownExpr("N"))
 
     @Test
     fun test0() = Assert.assertEquals(resource("0"), f.result.toStr())
 
     @Test
-    fun test1() = inline(0, resource("1"))
+    fun test1() = testInline(call, 0, resource("1"))
 
     @Test
-    fun test5() = inline(5, resource("5"))
+    fun test5() = testInline(call, 5, resource("5"))
 }
