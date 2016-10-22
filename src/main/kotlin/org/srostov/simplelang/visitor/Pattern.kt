@@ -4,8 +4,8 @@ import org.srostov.simplelang.*
 import org.srostov.simplelang.visitor.base.ExprVisitor
 import org.srostov.simplelang.visitor.base.Transformer
 
-class Pattern(val match: Operator.Call, val cause: Expr) {
-    fun match(x: Operator.Call): Matcher? {
+class Pattern(val match: Expr, val cause: Expr) {
+    fun match(x: Expr): Matcher? {
         val m = Matcher()
         if (match.accept(m, x)) return m else return null
     }

@@ -14,6 +14,9 @@ operator fun UserFun.invoke(vararg args: Expr): UserFun.Call {
 infix fun Expr.less(b: Expr): Expr = Less.newCall(this, b)
 infix fun Expr.more(b: Expr): Expr = More.newCall(this, b)
 infix fun Expr.eq(b: Expr): Expr = Equal.newCall(this, b)
+infix fun Expr.and(b: Expr): Expr = And.newCall(this, b)
+infix fun Expr.or(b: Expr): Expr = Or.newCall(this, b)
+fun not(b: Expr): Expr = Not.newCall(b)
 
 // arithmetic operators
 operator fun Expr.plus(b: Expr) = Plus.newCall(this, b)

@@ -8,6 +8,8 @@ object OptOptimizePatterns {
     val a = UnknownExpr("a")
     val b = UnknownExpr("b")
     val c = UnknownExpr("c")
+    val d = UnknownExpr("d")
+    val e = UnknownExpr("e")
     val c0 = 0.asConst
     val c1 = 1.asConst
 
@@ -29,9 +31,18 @@ object OptOptimizePatterns {
             Pattern(a + (b + c), (a + b) + c),
             Pattern(a * b + a * c, a * (b + c))
     )
+
+    val compositionReplacements = listOf(
+            Pattern(If(a, b, c),
+                    If(not(a), c, b)),
+            Pattern(If(a, If(b, c, c0), c0),
+                    If(a and b, c, c0))
+    )
 }
 
 class OpsOptimizer : Transformer<Unit>() {
+
+
     override fun visitOp(x: Operator.Call, a: Unit): Expr = with(x) {
         return tryVariant(x)
     }
