@@ -5,8 +5,8 @@ import org.junit.Test
 import org.srostov.simplelang.*
 import org.srostov.simplelang.visitor.toStr
 
-class InlineTest {
-    val f = UserFun("f", 2) {
+class InlineTest1 : BaseTest() {
+    val f = UserFun("f", "i", "n") {
         val (i, n) = this.args
         val f = this
 
@@ -35,19 +35,11 @@ class InlineTest {
     }
 
     @Test
-    fun test() {
-        resource("inline-0.txt")
+    fun test0() = Assert.assertEquals(resource("0"), f.result.toStr())
 
-        Assert.assertEquals(resource("inline-0.txt"), f.result.toStr())
+    @Test
+    fun test1() = inline(0, resource("1"))
 
-        inline(0, resource("inline-1.txt"))
-
-        inline(5, resource("inline-5.txt"))
-    }
-
-    private fun resource(s: String) = javaClass.getResource(s).readText()
+    @Test
+    fun test5() = inline(5, resource("5"))
 }
-
-private fun String.trimLines(): String =
-        lineSequence().
-                joinToString(separator = "\n", transform = String::trimEnd)

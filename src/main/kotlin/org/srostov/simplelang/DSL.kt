@@ -2,7 +2,10 @@ package org.srostov.simplelang
 
 fun Operator.newCall(vararg args: Expr) = Operator.Call(this, args.toList())
 
-operator fun UserFun.invoke(vararg args: Expr) = UserFun.Call(this, args.toList())
+operator fun UserFun.invoke(vararg args: Expr): UserFun.Call {
+    check(args.size == this.args.size) { "Excepted ${this.args.size} args, ${args.size} got" }
+    return UserFun.Call(this, args.toList())
+}
 
 //operator fun Expr.get(index: Expr) = Get.newCall(index)
 //

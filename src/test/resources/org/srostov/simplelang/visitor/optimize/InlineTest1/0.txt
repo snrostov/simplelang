@@ -1,0 +1,6 @@
+
+if (i < n) {
+  "number " append i append ", " append f(i + 1, n)
+} else {
+  ""
+}

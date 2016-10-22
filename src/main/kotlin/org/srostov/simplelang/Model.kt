@@ -17,9 +17,12 @@
 package org.srostov.simplelang
 
 import org.srostov.simplelang.visitor.base.ExprVisitor
+import org.srostov.simplelang.visitor.toStr
 
 abstract class Expr {
     abstract fun <R, T> accept(v: ExprVisitor<R, T>, a: T = Unit as T): R
+
+    override fun toString(): String = this.toStr()
 }
 
 abstract class VarExpr : Expr() {
@@ -45,11 +48,11 @@ class If(val condition: Expr, val _then: Expr, val _else: Expr) : Fun(listOf(con
     override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitIf(this, a)
 }
 
-class UserFun(val name: String, args: Int, resultBuilder: UserFun.() -> Expr) {
-    val args: List<Arg> = (0..args).map { Arg(this, it) }
+class UserFun(val name: String, vararg args: String, resultBuilder: UserFun.() -> Expr) {
+    val args: List<Arg> = args.mapIndexed { i, s -> Arg(this, i, s) }
     var result: Expr = resultBuilder(this)
 
-    class Arg(val f: UserFun, val i: Int) : RefExpr() {
+    class Arg(val f: UserFun, val i: Int, val name: String) : RefExpr() {
         override fun <R, T> accept(v: ExprVisitor<R, T>, a: T): R = v.visitUserFunInput(this, a)
     }
 

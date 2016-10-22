@@ -4,10 +4,10 @@ Simple programming language for learning compiler theory.
 
 ### Model
 
-All expression is pure functions (result of function is defined only by arguments, no side effect).
+All expressions is pure functions (result of function is defined only by arguments, no side effect).
 Constant is function with 0 args.
-Conditional expression and operators are base functions: `+`, `-`, `*`, `/`, `%`, `and`, `or`, `not`, `>`, `=`, `<`.
-All other expression is based on them.
+Conditional expression and operators `+`, `-`, `*`, `/`, `%`, `and`, `or`, `not`, `>`, `=`, `<` are base functions.
+All other expression is composition of function calls.
 User functions can be recursive. 
 Cycle is special case for recursive tail call.
 

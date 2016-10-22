@@ -48,8 +48,7 @@ class Printer : PrinterBase() {
     }
 
     override fun visitUserFunInput(x: UserFun.Arg, a: Unit) {
-        append("arg")
-        append(x.i.toString())
+        append(x.name)
     }
 
     override fun visitCycle(x: Cycle.Call, a: Unit) {
